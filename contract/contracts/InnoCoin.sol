@@ -100,6 +100,12 @@ contract InnoCoin {
             good_till: _good_till,
             owner: msg.sender
         });
+
+        if (_side == OrderSide.Ask) {
+            asks.push(order);
+        } else if (_side == OrderSide.Bid) {
+            bids.push(order);
+        }
         
         (uint256[] memory remove_bids, uint256[] memory remove_asks, bool covered) = this.tryCover(_side, order);
 
