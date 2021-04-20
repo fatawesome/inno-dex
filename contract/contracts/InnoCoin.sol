@@ -1,4 +1,4 @@
-pragma solidity ^0.5.16;
+pragma solidity ^0.7.3;
 pragma experimental ABIEncoderV2;
 
 contract InnoCoin {
@@ -91,14 +91,14 @@ contract InnoCoin {
         }
 
         Order memory order = Order({
-            uid: next_order++,
-            created_at: now,
-            price: _price,
-            quantity: _quantity,
-            flags: _flags,
-            // TODO: implement good till shit
-            good_till: _good_till,
-            owner: msg.sender
+        uid: next_order++,
+        created_at: block.timestamp,
+        price: _price,
+        quantity: _quantity,
+        flags: _flags,
+        // TODO: implement good till
+        good_till: _good_till,
+        owner: msg.sender
         });
 
         if (_side == OrderSide.Ask) {
@@ -106,7 +106,7 @@ contract InnoCoin {
         } else if (_side == OrderSide.Bid) {
             bids.push(order);
         }
-        
+
         (uint256[] memory remove_bids, uint256[] memory remove_asks, bool covered) = this.tryCover(_side, order);
 
         this.filterAsksAndBids(remove_asks, remove_bids);
@@ -208,7 +208,7 @@ contract InnoCoin {
                     asks[j - 1] = asks[j];
                 }
             }
-            asks.length--;
+            asks.pop();
         }
         for (uint256 i = 0; i < remove_bids.length; i++) {
             uint256 uid_to_remove = remove_bids[i];
@@ -220,7 +220,7 @@ contract InnoCoin {
                     bids[j - 1] = bids[j];
                 }
             }
-            bids.length--;
+            bids.pop();
         }
     }
 }
