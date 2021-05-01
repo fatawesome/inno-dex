@@ -333,6 +333,35 @@ contract InnoDEX {
         this.filterAsksAndBids(remove_asks, remove_bids);
     }
 
+    function cancelOrder(uint256 _uid) public {
+        uint256[] memory remove_asks = new uint256[](1);
+        uint256[] memory remove_bids = new uint256[](1);
+        bool ok = false;
+        for (uint256 i = 0; i < asks.length; i++) {
+            if (asks[i].uid == _uid) {
+                remove_asks[0] = _uid;
+                emit OrderCanceled(_uid);
+                canceled_asks.push(asks[i]);
+                ok = true;
+                break;
+            }
+        }
+        for (uint256 i = 0; i < bids.length; i++) {
+            if (bids[i].uid == _uid) {
+                remove_bids[0] = _uid;
+                emit OrderCanceled(_uid);
+                canceled_bids.push(bids[i]);
+                ok = true;
+                break;
+            }
+        }
+        if (!ok) {
+            revert("Order not found");
+        } else {
+            this.filterAsksAndBids(remove_asks, remove_bids);
+        }
+    }
+
     function filterAsksAndBids(
         uint256[] memory remove_asks,
         uint256[] memory remove_bids

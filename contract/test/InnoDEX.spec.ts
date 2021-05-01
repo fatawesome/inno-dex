@@ -376,4 +376,45 @@ describe('InnoDEX', () => {
       })
     })
   })
+
+  describe('#cancelOrder', () => {
+    describe('when canceling an ask', () => {
+      it('should cancel the order and emit OrderCanceled', async () => {
+        await dex.limitOrder(1, OrderSide.Ask, 10, 20, OrderFlags.GoodTillCancel, 0)
+        const promise = dex.cancelOrder(1)
+
+        await expect(promise)
+          .emit(dex, 'OrderCanceled')
+          .withArgs(1)
+
+        await expectAllOrderIds(dex, {
+          [OrderType.canceledAsk]: [1]
+        })
+      })
+    })
+
+    describe('when canceling a bid', () => {
+      it('should cancel the order and emit OrderCanceled', async () => {
+        await dex.limitOrder(1, OrderSide.Bid, 10, 20, OrderFlags.GoodTillCancel, 0, { value: 10 * 20 })
+        const promise = dex.cancelOrder(1)
+
+        await expect(promise)
+          .emit(dex, 'OrderCanceled')
+          .withArgs(1)
+
+        await expectAllOrderIds(dex, {
+          [OrderType.canceledBid]: [1]
+        })
+      })
+    })
+
+    describe('when canceling a non-existent order', () => {
+      it('should revert', async () => {
+        const promise = dex.cancelOrder(100500)
+
+        await expect(promise)
+          .revertedWith('Order not found')
+      })
+    })
+  })
 })
