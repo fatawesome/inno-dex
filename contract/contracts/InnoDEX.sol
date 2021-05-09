@@ -97,6 +97,14 @@ contract InnoDEX {
         return canceled_bids.length;
     }
 
+    function allAsks() external view returns (Order[] memory) {
+        return asks;
+    }
+
+    function allBids() external view returns (Order[] memory) {
+        return bids;
+    }
+
     function orderByUid(uint256 uid) external view returns (Order memory) {
         for (uint256 i = 0; i < asks.length; i++) {
             if (asks[i].uid == uid) {

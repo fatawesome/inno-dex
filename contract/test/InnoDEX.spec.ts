@@ -417,4 +417,13 @@ describe('InnoDEX', () => {
       })
     })
   })
+
+  describe('#allAsks', () => {
+    it('should return all asks', async () => {
+      await dex.limitOrder(1, OrderSide.Ask, 10, 20, OrderFlags.GoodTillCancel, 0)
+      const asks = await dex.allAsks()
+      expect(asks).lengthOf(1)
+      expect(asks[0].uid).eq(1)
+    })
+  })
 })
