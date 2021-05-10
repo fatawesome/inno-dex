@@ -51,7 +51,7 @@ contract InnoCoin is ERC20 {
             "Must be authorized to spend that much lmao"
         );
 
-        allowances[_from][msg.sender] -= 1;
+        allowances[_from][msg.sender] -= _value;
         balances[_from] -= _value;
         balances[_to] += _value;
 
