@@ -1,7 +1,7 @@
-import { Signer } from 'ethers'
-import { ethers } from 'hardhat'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+import { Signer } from 'ethers'
+import { ethers } from 'hardhat'
 import { InnoCoin } from '../typechain'
 
 chai.use(chaiAsPromised)

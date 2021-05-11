@@ -1,7 +1,7 @@
-import { Signer } from 'ethers'
-import { ethers, network } from 'hardhat'
 import chai, { expect } from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+import { Signer } from 'ethers'
+import { ethers, network } from 'hardhat'
 import { InnoCoin, InnoDEX } from '../typechain'
 
 chai.use(chaiAsPromised)
@@ -57,7 +57,7 @@ async function expectOrderIds (dex: InnoDEX, type: OrderType, ids: number[]) {
     [OrderType.canceledBid]: {
       amount: 'amountOfCanceledBids',
       array: 'canceled_bids'
-    },
+    }
   }[type]
 
   const amountOfOrders = await dex[methods.amount]()
@@ -300,7 +300,7 @@ describe('InnoDEX', () => {
             // the previous respective order should be the only closed one
             await expectAllOrderIds(dex, {
               [OrderType.closedBid]: [2],
-              [OrderType.openAsk]: [1],
+              [OrderType.openAsk]: [1]
             })
 
             // the first account should have more eth by the bid's price point
@@ -353,7 +353,14 @@ describe('InnoDEX', () => {
     describe('when placing a TimeInForce order (handled using the next order)', () => {
       describe('when time is still good', () => {
         it('should not do anything with the order', async () => {
-          await dex.limitOrder(1, OrderSide.Ask, 10, 20, OrderFlags.TimeInForce, Math.floor(new Date().valueOf() / 1000 + 24 * 60 * 60))
+          await dex.limitOrder(
+            1,
+            OrderSide.Ask,
+            10,
+            20,
+            OrderFlags.TimeInForce,
+            Math.floor(new Date().valueOf() / 1000 + 24 * 60 * 60)
+          )
           await dex.limitOrder(2, OrderSide.Ask, 10, 20, OrderFlags.GoodTillCancel, 0)
 
           await expectAllOrderIds(dex, {
@@ -364,7 +371,14 @@ describe('InnoDEX', () => {
 
       describe('when time is up', () => {
         it('should cancel the old order', async () => {
-          await dex.limitOrder(1, OrderSide.Ask, 10, 20, OrderFlags.TimeInForce, Math.floor(new Date().valueOf() / 1000 + 24 * 60 * 60))
+          await dex.limitOrder(
+            1,
+            OrderSide.Ask,
+            10,
+            20,
+            OrderFlags.TimeInForce,
+            Math.floor(new Date().valueOf() / 1000 + 24 * 60 * 60)
+          )
           await network.provider.send('evm_increaseTime', [2 * 24 * 60 * 60])
           await dex.limitOrder(2, OrderSide.Ask, 10, 20, OrderFlags.GoodTillCancel, 0)
 
