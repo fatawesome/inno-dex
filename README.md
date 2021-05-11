@@ -18,4 +18,9 @@ $ yarn test
 
 All contracts and typings should be compiled automatically.
 
-## ...
+## Client
+For better user experience we have implemented a web application. 
+It gives real-time access to an exchange and allows to check current market situation, to buy 
+and to sell InnoCoin with ETH.
+
+Link: https://github.com/fatawesome/inno-dex-client
